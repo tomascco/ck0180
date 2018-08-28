@@ -11,35 +11,33 @@ typedef struct NO {
   struct NO* prox;
 } no;
 
-typedef struct HEADER {
-  no* head;
-} header;
+typedef no* list_t;
 
-header* criar_lista() {
-  header* lista = malloc(sizeof(header));
-  lista->head = NULL;
+list_t* criar_lista() {
+  list_t* lista = malloc(sizeof(list_t));
+  *lista = NULL;
   return lista;
 }
 
-void adicionar_elemento(header* lista, int chave) {
+void adicionar_elemento(list_t* lista, int chave) {
   no* nvo_elemento = malloc(sizeof(no));
-  if (lista->head == NULL) {
+  if (*lista == NULL) {
     nvo_elemento->ant = NULL;
     nvo_elemento->prox = NULL;
   }
   else {
-    nvo_elemento->prox = lista->head;
-    (lista->head)->ant = nvo_elemento;
+    nvo_elemento->prox = *lista;
+    (*lista)->ant = nvo_elemento;
   }
   nvo_elemento->ant = NULL;
-  lista->head = nvo_elemento;
+  *lista = nvo_elemento;
   nvo_elemento->chave = chave;
 }
 
-void remover_elemento(header* lista, no* removendo) {
+void remover_elemento(list_t* lista, no* removendo) {
   if (removendo->ant == NULL) {
     (removendo->prox)->ant = NULL;
-    lista->head = removendo->prox;
+    lista = &removendo->prox;
   }
   else if (removendo->prox == NULL) {
     (removendo->ant)->prox = NULL;
@@ -52,11 +50,11 @@ void remover_elemento(header* lista, no* removendo) {
 }
 
 int main() {
-  header* lista = criar_lista();
+  list_t* lista = criar_lista();
   for (int i = 0; i < 30; i++) {
     adicionar_elemento(lista, i);
   }
-  no* elemento_atual = (lista->head);
+  no* elemento_atual = *lista;
   while (elemento_atual != NULL) {
     printf("elemento: %d\n", elemento_atual->chave);
     elemento_atual = elemento_atual->prox;
